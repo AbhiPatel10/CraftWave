@@ -1,8 +1,9 @@
 import React, { useRef } from 'react'
 import Image from "next/image"
 import Link from "next/link"
-import { FaCartArrowDown } from 'react-icons/fa';
 import { AiFillCloseCircle, AiFillPlusCircle, AiFillMinusCircle } from 'react-icons/ai';
+import { FaCartArrowDown } from 'react-icons/fa';
+import { MdAccountCircle } from 'react-icons/md';
 
 
 const Navbar = ({cart, addToCart, removeFromCart, clearCart, subTotal}) => {
@@ -29,8 +30,9 @@ const Navbar = ({cart, addToCart, removeFromCart, clearCart, subTotal}) => {
                 <Link href={'/mugs'}><a><li>Mugs</li></a></Link>
             </ul>
         </div>
-        <div onClick={toggleCart} className='cart absolute right-0 top-5 mx-5 cursor-pointer '>
-            <FaCartArrowDown className='text-3xl'/>
+        <div className='cart absolute right-0 top-5 mx-5 cursor-pointer flex'>
+            <Link href={'/login'}><MdAccountCircle className='text-2xl md:text-3xl mx-2'/></Link>
+            <FaCartArrowDown onClick={toggleCart} className='text-2xl md:text-3xl'/>
         </div>
         <div ref={ref} className={`z-50 w-72 h-[100vh] sideCart absolute top-0 right-0 bg-pink-100 py-10 px-7 transform transition-transform ${Object.keys(cart).length !== 0 ? 'translate-x-0' : 'translate-x-full' }`}>
             <h2 className='font-bold text-xl text-center mb-5'>Shopping Cart</h2>
