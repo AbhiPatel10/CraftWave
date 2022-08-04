@@ -31,7 +31,7 @@ const Navbar = ({cart, addToCart, removeFromCart, clearCart, subTotal}) => {
             </ul>
         </div>
         <div className='cart absolute right-0 top-5 mx-5 cursor-pointer flex'>
-            <Link href={'/login'}><MdAccountCircle className='text-2xl md:text-3xl mx-2'/></Link>
+            <Link href={'/login'}><a><MdAccountCircle className='text-2xl md:text-3xl mx-2'/></a></Link>
             <FaCartArrowDown onClick={toggleCart} className='text-2xl md:text-3xl'/>
         </div>
         <div ref={ref} className={`z-50 w-72 h-[100vh] sideCart absolute top-0 right-0 bg-pink-100 py-10 px-7 transform transition-transform ${Object.keys(cart).length !== 0 ? 'translate-x-0' : 'translate-x-full' }`}>
@@ -51,7 +51,7 @@ const Navbar = ({cart, addToCart, removeFromCart, clearCart, subTotal}) => {
         </ol>
         <div className='font-bold mt-10'>SubTotal: ₹{subTotal}</div>
         <div className='flex justify-between mt-5'>
-            <Link href={'/checkout'}><button className="flex text-white bg-pink-500 border-0 py-2 px-5 focus:outline-none hover:bg-pink-600 rounded text-sm">  Checkout </button></Link>
+            <Link href={'/checkout'}><a><button className="flex text-white bg-pink-500 border-0 py-2 px-5 focus:outline-none hover:bg-pink-600 rounded text-sm">  Checkout </button></a></Link>
             <button onClick={clearCart} className="flex text-white bg-pink-500 border-0 py-2 px-5 focus:outline-none hover:bg-pink-600 rounded text-sm">Clear Cart</button>
         
         </div>
