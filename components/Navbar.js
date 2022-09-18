@@ -34,7 +34,7 @@ const Navbar = ({cart, addToCart, removeFromCart, clearCart, subTotal}) => {
             <Link href={'/login'}><a><MdAccountCircle className='text-2xl md:text-3xl mx-2'/></a></Link>
             <FaCartArrowDown onClick={toggleCart} className='text-2xl md:text-3xl'/>
         </div>
-        <div ref={ref} className={`z-50 w-72 h-[100vh] sideCart absolute top-0 right-0 bg-pink-100 py-10 px-7 transform transition-transform ${Object.keys(cart).length !== 0 ? 'translate-x-0' : 'translate-x-full' }`}>
+        <div ref={ref} className={`z-50 w-72 h-[100vh] sideCart overflow-y-scroll absolute top-0 right-0 bg-pink-100 py-10 px-7 transform transition-transform ${Object.keys(cart).length !== 0 ? 'translate-x-0' : 'translate-x-full' }`}>
             <h2 className='font-bold text-xl text-center mb-5'>Shopping Cart</h2>
             <span onClick={toggleCart} className='absolute top-6 right-4 cursor-pointer text-2xl text-pink-500'><AiFillCloseCircle /></span>
         <ol className='list-decimal font-semibold'>
