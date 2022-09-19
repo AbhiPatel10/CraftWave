@@ -1,20 +1,27 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import Link from "next/link"
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useRouter } from 'next/router';
 
 
 const Signup = () => {
-  const [name, setName] = useState();
-  const [email, setEmail] = useState();
-  const [password, setPassword] = useState()
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('')
+  const router = useRouter()
 
+  useEffect(()=>{
+    if(localStorage.getItem("Token")){
+      router.push('/')
+    }
+  }, [])
 
   const handleSubmit = async (e)=>{
     e.preventDefault()
     const data = { name, email, password }
 
-    let res = await fetch('http://localhost:3000/api/signup',{
+    let res = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/signup`,{
       method: 'POST',
       headers: {
         'content-Type': 'application/json'

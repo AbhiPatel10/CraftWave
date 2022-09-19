@@ -1,20 +1,27 @@
-import React, {useState} from 'react'
+import React, { useState, useEffect } from 'react'
 import Link from "next/link"
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useRouter } from 'next/router';
 
+
 const Login = () => {
 
-  const [email, setEmail] = useState();
-  const [password, setPassword] = useState()
+  
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('')
   const router = useRouter()
-
-  const handleSubmit = async (e)=>{
+  
+  useEffect(()=>{
+    if(localStorage.getItem("Token")){
+      router.push('/')
+    }
+  }, [])
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    const data = {  email, password }
+    const data = { email, password }
 
-    let res = await fetch('http://localhost:3000/api/login',{
+    let res = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/login`, {
       method: 'POST',
       headers: {
         'content-Type': 'application/json'
@@ -23,8 +30,9 @@ const Login = () => {
     })
 
     let Response = await res.json()
-    console.log("success", Response.success)
-    if(Response.success === true){
+    console.log("Response from Login", Response)
+    if (Response.success === true) {
+      localStorage.setItem('Token', Response.token)
       setEmail('')
       setPassword('')
       toast.success("You'r Successfully Logged In!", {
@@ -35,11 +43,11 @@ const Login = () => {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        });
-        setTimeout(() =>{
-          router.push('/')
-        },1000)
-    }else{
+      });
+      setTimeout(() => {
+        router.push('/')
+      }, 1000)
+    } else {
       toast.error(Response.error, {
         position: "top-left",
         autoClose: 5000,
@@ -48,24 +56,24 @@ const Login = () => {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        });
+      });
     }
   }
 
   return (
     <>
       <div className="min-h-full flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      <ToastContainer
-      position="top-left"
-      autoClose={5000}
-      hideProgressBar={false}
-      newestOnTop={false}
-      closeOnClick
-      rtl={false}
-      pauseOnFocusLoss
-      draggable
-      pauseOnHover
-      />
+        <ToastContainer
+          position="top-left"
+          autoClose={ 5000 }
+          hideProgressBar={ false }
+          newestOnTop={ false }
+          closeOnClick
+          rtl={ false }
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+        />
         <div className="max-w-md w-full space-y-8">
           <div>
             <img className="mx-auto h-12 w-auto" src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg" alt="Workflow" />
@@ -75,25 +83,20 @@ const Login = () => {
               <Link href={ '/signup' }><a href="#" className="font-medium text-pink-600 hover:text-pink-500"> Sign Up </a></Link>
             </p>
           </div>
-          <form onSubmit={handleSubmit} className="mt-8 space-y-6" method="POST">
+          <form onSubmit={ handleSubmit } className="mt-8 space-y-6" method="POST">
             <input type="hidden" name="remember" value="true" />
             <div className="rounded-md shadow-sm -space-y-px">
               <div>
                 <label htmlFor="email" className="sr-only">Email address</label>
-                <input onChange={(e) => {setEmail(e.target.value)}} value={email} id="email" name="email" type="email" autoComplete="email" required className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-pink-500 focus:border-pink-500 focus:z-10 sm:text-sm" placeholder="Email address" />
+                <input onChange={ (e) => { setEmail(e.target.value) } } value={ email } id="email" name="email" type="email" autoComplete="email" required className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-pink-500 focus:border-pink-500 focus:z-10 sm:text-sm" placeholder="Email address" />
               </div>
               <div>
                 <label htmlFor="password" className="sr-only">Password</label>
-                <input onChange={(e) => {setPassword(e.target.value)}} value={password} id="password" name="password" type="password" autoComplete="current-password" required className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-pink-500 focus:border-pink-500 focus:z-10 sm:text-sm" placeholder="Password" />
+                <input onChange={ (e) => { setPassword(e.target.value) } } value={ password } id="password" name="password" type="password" autoComplete="current-password" required className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-pink-500 focus:border-pink-500 focus:z-10 sm:text-sm" placeholder="Password" />
               </div>
             </div>
 
             <div className="flex items-center justify-between">
-              <div className="flex items-center">
-                <input id="remember-me" name="remember-me" type="checkbox" className="h-4 w-4 text-pink-600 focus:ring-pink-500 border-gray-300 rounded" />
-                <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900"> Remember me </label>
-              </div>
-
               <div className="text-sm">
                 <Link href={ '/forgot' }><a href="#" className="font-medium text-pink-600 hover:text-pink-500"> Forgot your password? </a></Link>
               </div>

@@ -1,13 +1,21 @@
 // import Product from "../../models/Product"
 import connectDb from "../../middleware/mongoose"
 import User from "../../models/User"
+var CryptoJS = require("crypto-js");
+var jwt = require('jsonwebtoken');
+
 
 const handler = async (req, res) => {
     if (req.method == "POST") {
         let user = await User.findOne({ "email": req.body.email })
+        
+        var secretKey = "AbhiPatelEpicWear321666232"
+        var bytes   = CryptoJS.AES.decrypt(user.password, secretKey);
+        var Decrypt_password = bytes.toString(CryptoJS.enc.Utf8);
         if (user) {
-            if (req.body.email == user.email && req.body.password == user.password) {
-                res.status(200).json({ success: true, email: user.email, name: user.name })
+            if (req.body.email == user.email && Decrypt_password == req.body.password) {
+                var token = jwt.sign({ email: user.email, name: user.name }, "jwtSecretkey", { expiresIn: '2d' })
+                res.status(200).json({ success: true, token: token })
             }else{
                 res.status(400).json({ success: false, error: "Invalid Credentials" })
             }
