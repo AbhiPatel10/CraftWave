@@ -37,8 +37,8 @@ function MyApp({ Component, pageProps }) {
     const token = localStorage.getItem('Token')
     if(token){
       setUser({value: token})
-      setKey(Math.random())
     }
+    setKey(Math.random())
   }, [router.query])
   
   const logout = () =>{
@@ -71,7 +71,8 @@ function MyApp({ Component, pageProps }) {
 
   
   const buyNow = (itemCode, qty, price, name, size, variant) =>{
-    let newCart = {itemCode: {qty: 1, price, name, size, variant}};
+    let newCart = {}
+    newCart[itemCode] = {qty: 1, price, name, size, variant};
     setCart(newCart)
     saveCart(newCart)
     router.push('/checkout')
