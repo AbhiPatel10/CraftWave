@@ -1,22 +1,70 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 // import { FaCartArrowDown } from 'react-icons/fa';
 import { AiFillPlusCircle, AiFillMinusCircle } from 'react-icons/ai';
 import Link from "next/link"
 import Head from 'next/head';
 import Script from 'next/script';
+import { ToastContainer, toast } from 'react-toastify';
+import { useRouter } from 'next/router'
+import 'react-toastify/dist/ReactToastify.css';
 
-const Checkout = ({ cart, subTotal, addToCart, removeFromCart }) => {
+const Checkout = ({ cart, clearCart, subTotal, addToCart, removeFromCart }) => {
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [pincode, setPincode] = useState('');
   const [address, setAddress] = useState('');
-  // const [state, setState] = useState('');
-  // const [city, setcity] = useState('')
+  const [state, setState] = useState('');
+  const [city, setcity] = useState('')
   const [disabled, setDisabled] = useState('')
+  const [user, setUser] = useState({ value: null })
+  const router = useRouter()
 
-  const initiatePayment = async () => {
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem('myuser'))
+    if (user && user.token) {
+      setUser(user)
+      setEmail(user.email)
+    }
+  }, [])
+  useEffect(() => {
+    if (router.query.payment == 'fail') {
+      console.log("PAyment")
+      toast.error("Payment fail - Please try again!", {
+        position: "top-left",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    }
+
+  }, [router.query])
+
+
+  const pincodeHandler = async (e) => {
+    let pincode = e.target.value;
+    setPincode(pincode)
+    if (pincode.length == 6) {
+      let pins = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/pincode`)
+      let pinsJson = await pins.json()
+      console.log("pincode $$$>>>>>", pincode)
+      if (Object.keys(pinsJson).includes(pincode)) {
+        setState(pinsJson[pincode][1])
+        setcity(pinsJson[pincode][0])
+      }
+    } else {
+      setState('')
+      setcity('')
+    }
+  }
+
+  const initiatePayment = async (e) => {
+    e.preventDefault()
+    console.log("Its run")
     let oid = Math.floor(Math.random() * Date.now())
     const data = { cart, subTotal, oid, email: email, name, address, pincode, phone };
 
@@ -28,39 +76,66 @@ const Checkout = ({ cart, subTotal, addToCart, removeFromCart }) => {
       body: JSON.stringify(data),
     })
 
-    let txnToken = await a.json()
-    console.log(txnToken)
-
-    var config = {
-      "root": "",
-      "flow": "DEFAULT",
-      "data": {
-        "orderId": oid, /* update order id */
-        "token": txnToken, /* update token value */
-        "tokenType": "TXN_TOKEN",
-        "amount": subTotal /* update amount */
-      },
-      "handler": {
-        "notifyMerchant": function (eventName, data) {
-          console.log("notifyMerchant handler function called");
-          console.log("eventName => ", eventName);
-          console.log("data => ", data);
+    let txnRes = await a.json()
+    console.log("Transaction Token", txnRes)
+    if (txnRes.success) {
+      let txnToken = txnRes.txnToken
+      var config = {
+        "root": "",
+        "flow": "DEFAULT",
+        "data": {
+          "orderId": oid, /* update order id */
+          "token": txnToken, /* update token value */
+          "tokenType": "TXN_TOKEN",
+          "amount": subTotal /* update amount */
+        },
+        "handler": {
+          "notifyMerchant": function (eventName, data) {
+            console.log("notifyMerchant handler function called");
+            console.log("eventName => ", eventName);
+            console.log("data => ", data);
+          }
         }
+      };
+      // initialze configuration using init method
+      window.Paytm.CheckoutJS.init(config).then(function onSuccess() {
+        // after successfully updating configuration, invoke JS Checkout
+        window.Paytm.CheckoutJS.invoke();
+      }).catch(function onError(error) {
+        console.log("error => ", error);
+      });
+    } else {
+      // localStorage.removeItem('cart')
+      if (txnRes.cartClear) {
+        clearCart()
       }
-    };
-    // initialze configuration using init method
-    window.Paytm.CheckoutJS.init(config).then(function onSuccess() {
-      // after successfully updating configuration, invoke JS Checkout
-      window.Paytm.CheckoutJS.invoke();
-    }).catch(function onError(error) {
-      console.log("error => ", error);
-    });
+      toast.error(txnRes.error, {
+        position: "top-left",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    }
   }
 
   return (
     <div className='container px-5 sm:m-auto'>
+      <ToastContainer
+        position="top-left"
+        autoClose={ 5000 }
+        hideProgressBar={ false }
+        newestOnTop={ false }
+        closeOnClick
+        rtl={ false }
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
       <Head><meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0" /></Head>
-      <Script type="application/javascript" src={ `${process.env.NEXT_PUBLIC_PAYTM_HOST}/merchantpgpui/checkoutjs/merchants/${process.env.NEXT_PUBLIC_PAYTM_MID}.js` } onload="onScriptLoad();" crossorigin="anonymous" />
+      <Script type="application/javascript" src={ `${process.env.NEXT_PUBLIC_PAYTM_HOST}/merchantpgpui/checkoutjs/merchants/${process.env.NEXT_PUBLIC_PAYTM_MID}.js` } crossorigin="anonymous" />
       <h1 className='font-bold text-3xl my-8 text-center'>Checkout</h1>
       <h2 className='font-semibold text-xl'>1. Delivery Details</h2>
       <div className='mx-auto flex'>
@@ -73,7 +148,10 @@ const Checkout = ({ cart, subTotal, addToCart, removeFromCart }) => {
         <div className='px-2 w-1/2'>
           <div className=" mb-4">
             <label htmlFor="email" className="leading-7 text-sm text-gray-600">Email</label>
-            <input onChange={ (e) => { setEmail(e.target.value) } } type="email" id="email" name="email" className="w-full bg-white rounded border border-gray-300 focus:border-pink-500 focus:ring-2 focus:ring-pink-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" />
+            { user && user.token ? <input value={ user.email } readOnly={ true } type="email" id="email" name="email" className="w-full bg-white rounded border border-gray-300 focus:border-pink-500 focus:ring-2 focus:ring-pink-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" />
+
+              : <input onChange={ (e) => { setEmail(e.target.value) } } type="email" id="email" name="email" className="w-full bg-white rounded border border-gray-300 focus:border-pink-500 focus:ring-2 focus:ring-pink-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" /> }
+
           </div>
         </div>
       </div>
@@ -81,8 +159,7 @@ const Checkout = ({ cart, subTotal, addToCart, removeFromCart }) => {
       <div className='px-2 w-full'>
         <div className=" mb-4">
           <label htmlFor="adress" className="leading-7 text-sm text-gray-600">Address</label>
-          <input type="text" id="address" name="address" />
-          <textarea onChange={ (e) => { setAddress(e.target.value) } } name='address' id="" cols="30" rows="2" className="w-full bg-white rounded border border-gray-300 focus:border-pink-500 focus:ring-2 focus:ring-pink-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"> </textarea>
+          <input onChange={ (e) => { setAddress(e.target.value) } } type="text" id="address" name="address" className="w-full bg-white rounded border border-gray-300 focus:border-pink-500 focus:ring-2 focus:ring-pink-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" />
         </div>
       </div>
       <div className='mx-auto flex'>
@@ -90,13 +167,13 @@ const Checkout = ({ cart, subTotal, addToCart, removeFromCart }) => {
         <div className='px-2 w-1/2'>
           <div className=" mb-4">
             <label htmlFor="phone" className="leading-7 text-sm text-gray-600">Phone</label>
-            <input onChange={ (e) => { setPhone(e.target.value) } } type="phone" id="phone" name="phone" className="w-full bg-white rounded border border-gray-300 focus:border-pink-500 focus:ring-2 focus:ring-pink-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" />
+            <input placeholder='Your 10 digit Phone Number' onChange={ (e) => { setPhone(e.target.value) } } type="phone" id="phone" name="phone" className="w-full bg-white rounded border border-gray-300 focus:border-pink-500 focus:ring-2 focus:ring-pink-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" />
           </div>
         </div>
         <div className='px-2 w-1/2'>
           <div className=" mb-4">
             <label htmlFor="pincode" className="leading-7 text-sm text-gray-600">Pincode</label>
-            <input onChange={ (e) => { setPincode(e.target.value) } } type="text" id="pincode" name="pincode" className="w-full bg-white rounded border border-gray-300 focus:border-pink-500 focus:ring-2 focus:ring-pink-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" />
+            <input placeholder='Your 6 digit Pincode' onChange={ pincodeHandler } type="text" id="pincode" name="pincode" className="w-full bg-white rounded border border-gray-300 focus:border-pink-500 focus:ring-2 focus:ring-pink-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" />
           </div>
         </div>
       </div>
@@ -104,13 +181,13 @@ const Checkout = ({ cart, subTotal, addToCart, removeFromCart }) => {
         <div className='px-2 w-1/2'>
           <div className=" mb-4">
             <label htmlFor="state" className="leading-7 text-sm text-gray-600">State</label>
-            <input type="text" id="state" name="state" className="w-full bg-white rounded border border-gray-300 focus:border-pink-500 focus:ring-2 focus:ring-pink-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" readOnly={true}/>
+            <input value={ state } type="text" id="state" name="state" className="w-full bg-white rounded border border-gray-300 focus:border-pink-500 focus:ring-2 focus:ring-pink-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" readOnly={ true } />
           </div>
         </div>
         <div className='px-2 w-1/2'>
           <div className=" mb-4">
-            <label htmlFor="city" className="leading-7 text-sm text-gray-600">City</label>
-            <input type="text" id="city" name="city" className="w-full bg-white rounded border border-gray-300 focus:border-pink-500 focus:ring-2 focus:ring-pink-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" readOnly={true}/>
+            <label htmlFor="city" className="leading-7 text-sm text-gray-600">District</label>
+            <input value={ city } type="text" id="city" name="city" className="w-full bg-white rounded border border-gray-300 focus:border-pink-500 focus:ring-2 focus:ring-pink-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" readOnly={ true } />
           </div>
         </div>
       </div>

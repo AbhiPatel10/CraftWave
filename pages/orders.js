@@ -14,13 +14,13 @@ const Orders = () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ token: localStorage.getItem('Token') }),
+                body: JSON.stringify({ token: JSON.parse(localStorage.getItem('myuser')).token }),
             })
             let res = await a.json()
             setOrders(res.orders)
         }
 
-        if (!localStorage.getItem("Token")) {
+        if (!localStorage.getItem("myuser")) {
             router.push('/')
         } else {
             fetchOrder()
@@ -69,12 +69,11 @@ const Orders = () => {
                                                             { data.amount }
                                                         </td>
                                                         <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                                                            <Link href={ '/order?id=' + item._id }><a>Details</a></Link>
+                                                            <Link href={ '/order?id=' + data._id }><a>Details</a></Link>
                                                         </td>
                                                     </tr>
                                                 )
                                             }) }
-
                                         </tbody>
                                     </table>
                                 </div>

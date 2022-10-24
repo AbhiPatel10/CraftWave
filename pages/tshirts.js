@@ -9,7 +9,7 @@ const Tshirts = ({products}) => {
     <section className="text-gray-600 body-font">
     <div className="container px-5 py-24 mx-auto">
       <div className="flex flex-wrap -m-4 justify-center">
-      {Object.keys(products).map((item)=>{
+      {products && Object.keys(products).map((item)=>{
         return (
           <Link key={products[item]._id} passHref={true} href={`/product/${products[item].slug}`}>
             <div className="lg:w-1/5 md:w-1/2 p-4 w-full cursor-pointer shadow-lg m-5">
@@ -65,6 +65,9 @@ export async function getServerSideProps(context) {
       if(item.availableQty > 0){
         tshirts[item.title].color = [item.color]
         tshirts[item.title].size = [item.size]
+      }else{
+        tshirts[item.title].color = []
+        tshirts[item.title].size = []
       }
     }
   }

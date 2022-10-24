@@ -1,6 +1,7 @@
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import '../styles/globals.css'
+import '../styles/Herosection.css'
 import {useState, useEffect} from 'react'
 import { useRouter } from 'next/router';
 import LoadingBar from 'react-top-loading-bar'
@@ -17,7 +18,7 @@ function MyApp({ Component, pageProps }) {
     try {
       if(localStorage.getItem("cart")){
         setCart(JSON.parse(localStorage.getItem("cart")))
-        saveCart(localStorage.getItem("cart"))
+        saveCart(JSON.parse(localStorage.getItem("cart")))
       }
     } catch (error) {
       console.log(error);
@@ -34,21 +35,22 @@ function MyApp({ Component, pageProps }) {
     router.events.on("routeChangeStart", ()=>{
       setProgress(40)
     })
-    const token = localStorage.getItem('Token')
-    if(token){
-      setUser({value: token})
+    const myuser = JSON.parse(localStorage.getItem('myuser'))
+    if(myuser){
+      setUser({value: myuser.token, email: myuser.email})
     }
     setKey(Math.random())
   }, [router.query])
   
   const logout = () =>{
     setUser({value: null})
-    localStorage.removeItem('Token')
+    localStorage.removeItem('myuser')
     setKey(Math.random())
     router.push('/')
   }
 
   const saveCart = (myCart) =>{
+    console.log("From Savecart", myCart)
     localStorage.setItem("cart", JSON.stringify(myCart))
     let subt = 0;
     let keys = Object.keys(myCart)
@@ -59,6 +61,9 @@ function MyApp({ Component, pageProps }) {
   }
 
   const addToCart = (itemCode, qty, price, name, size, variant) =>{
+    if(Object.keys(cart).length == 0){
+      setKey(Math.random())
+    }
     let newCart = cart;
     if(itemCode in cart){
       newCart[itemCode].qty = cart[itemCode].qty + qty

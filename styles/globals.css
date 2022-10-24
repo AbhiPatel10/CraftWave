@@ -1,6 +1,17 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-body{
+/* body{
     overflow-x: hidden;
+} */
+
+.section-title{
+    /* position: relative; */
+    content: "";
+    width: 100%;
+    height: 0;
+    /* top: 50px; */
+    left: 0;
+    border-top: 1px dashed #bec5cb;
+    z-index: -1;
 }

@@ -21,6 +21,10 @@ const OrderSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    transactionid:{
+        type: String,
+        default: ""
+    },
     amount: {
         type: Number,
         required: true
@@ -28,7 +32,12 @@ const OrderSchema = new mongoose.Schema({
     status: {
         type: String,
         required: true,
-        default: "Pending"
+        default: "Initiated"
+    },
+    deliveryStatus: {
+        type: String,
+        required: true,
+        default: "unShipped"
     }
 }, {timestamps: true});
 mongoose.models = {}
