@@ -7,6 +7,8 @@ import Script from 'next/script';
 import { ToastContainer, toast } from 'react-toastify';
 import { useRouter } from 'next/router'
 import 'react-toastify/dist/ReactToastify.css';
+import ReactLoading from 'react-loading';
+
 
 const Checkout = ({ cart, clearCart, subTotal, addToCart, removeFromCart }) => {
 
@@ -17,7 +19,7 @@ const Checkout = ({ cart, clearCart, subTotal, addToCart, removeFromCart }) => {
   const [address, setAddress] = useState('');
   const [state, setState] = useState('');
   const [city, setcity] = useState('')
-  const [disabled, setDisabled] = useState('')
+  const [loading, setLoading] = useState(false)
   const [user, setUser] = useState({ value: null })
   const router = useRouter()
 
@@ -46,6 +48,7 @@ const Checkout = ({ cart, clearCart, subTotal, addToCart, removeFromCart }) => {
 
 
   const pincodeHandler = async (e) => {
+
     let pincode = e.target.value;
     setPincode(pincode)
     if (pincode.length == 6) {
@@ -63,6 +66,7 @@ const Checkout = ({ cart, clearCart, subTotal, addToCart, removeFromCart }) => {
   }
 
   const initiatePayment = async (e) => {
+    setLoading(true)
     e.preventDefault()
     console.log("Its run")
     let oid = Math.floor(Math.random() * Date.now())
@@ -79,6 +83,7 @@ const Checkout = ({ cart, clearCart, subTotal, addToCart, removeFromCart }) => {
     let txnRes = await a.json()
     console.log("Transaction Token", txnRes)
     if (txnRes.success) {
+      setLoading(false)
       let txnToken = txnRes.txnToken
       var config = {
         "root": "",
@@ -105,6 +110,7 @@ const Checkout = ({ cart, clearCart, subTotal, addToCart, removeFromCart }) => {
         console.log("error => ", error);
       });
     } else {
+      setLoading(false)
       // localStorage.removeItem('cart')
       if (txnRes.cartClear) {
         clearCart()
@@ -134,6 +140,9 @@ const Checkout = ({ cart, clearCart, subTotal, addToCart, removeFromCart }) => {
         draggable
         pauseOnHover
       />
+      { loading && <div className='fixed top-1/2 left-1/2 '>
+        <ReactLoading type="spinningBubbles" className='' margin='auto' color="#000000" />
+      </div>}
       <Head><meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0" /></Head>
       <Script type="application/javascript" src={ `${process.env.NEXT_PUBLIC_PAYTM_HOST}/merchantpgpui/checkoutjs/merchants/${process.env.NEXT_PUBLIC_PAYTM_MID}.js` } crossorigin="anonymous" />
       <h1 className='font-bold text-3xl my-8 text-center'>Checkout</h1>

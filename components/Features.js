@@ -6,10 +6,10 @@ import { BiPhoneCall } from 'react-icons/bi';
 const Features = () => {
     return (
         <>
-            <section className="text-gray-600 body-font">
+            <section className="text-gray-600 my-24 body-font">
                 <div className="container px-5 py-1 mx-auto">
                     <div className="flex flex-wrap -m-4">
-                        <div className="xl:w-1/4 md:w-1/2 p-4">
+                        <div className="xl:w-1/4 md:w-1/2 p-4 w-full">
                             <div className="border border-gray-200 p-6 rounded-lg flex justify-center items-center">
                                 <div className="w-10 h-10 inline-flex items-center justify-center rounded-full bg-indigo-100 text-indigo-500">
                                     <svg fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" className="w-6 h-6" viewBox="0 0 24 24">
@@ -23,7 +23,7 @@ const Features = () => {
 
                             </div>
                         </div>
-                        <div className="xl:w-1/4 md:w-1/2 p-4">
+                        <div className="xl:w-1/4 md:w-1/2 p-4 w-full">
                             <div className="border border-gray-200 p-6 rounded-lg flex justify-center items-center">
                                 <div className="w-10 h-10 inline-flex items-center justify-center rounded-full bg-indigo-100 text-indigo-500">
                                     <BsTruck className='text-2xl' />
@@ -36,7 +36,7 @@ const Features = () => {
 
                             </div>
                         </div>
-                        <div className="xl:w-1/4 md:w-1/2 p-4">
+                        <div className="xl:w-1/4 md:w-1/2 p-4 w-full">
                             <div className="border border-gray-200 p-6 rounded-lg flex justify-center items-center">
                                 <div className="w-10 h-10 inline-flex items-center justify-center rounded-full bg-indigo-100 text-indigo-500">
                                     <TbArrowsRightLeft className='text-2xl' />
@@ -48,7 +48,7 @@ const Features = () => {
 
                             </div>
                         </div>
-                        <div className="xl:w-1/4 md:w-1/2 p-4">
+                        <div className="xl:w-1/4 md:w-1/2 p-4 w-full">
                             <div className="border border-gray-200 p-6 rounded-lg flex justify-center items-center">
                                 <div className="w-10 h-10 inline-flex items-center justify-center rounded-full bg-indigo-100 text-indigo-500">
                                     <BiPhoneCall />

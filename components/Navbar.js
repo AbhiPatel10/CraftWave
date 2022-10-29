@@ -43,7 +43,7 @@ const Navbar = ({ logout, user, cart, addToCart, removeFromCart, clearCart, subT
                 </div> }
 
             </span>
-            <div className={ `flex flex-col justify-center items-center md:flex-row md:justify-start py-1 shadow-md sticky top-0 z-10 bg-white ${!sidebar && "overflow-hidden"}` }>
+            <div className={ `flex flex-col justify-center items-center md:flex-row md:justify-start py-1 shadow-md sticky top-0 z-20 bg-white ${!sidebar && "overflow-hidden"}` }>
                 <div className='logo mr-auto md:mx-5'>
                     <Link href={ '/' }><a><Image src="/logo.jpg" width={ 180 } height={ 70 } alt="epic wear logo" /></a></Link>
                 </div>

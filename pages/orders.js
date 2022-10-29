@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router';
 import Link from 'next/link'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Orders = () => {
     const router = useRouter()
     const [orders, setOrders] = useState([])
 
     useEffect(() => {
-
         const fetchOrder = async () => {
             let a = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/myorders`, {
                 method: 'POST', // or 'PUT'
@@ -17,6 +18,22 @@ const Orders = () => {
                 body: JSON.stringify({ token: JSON.parse(localStorage.getItem('myuser')).token }),
             })
             let res = await a.json()
+            console.log(" res sss--->>>>", res.error)
+            if (res.error && res.error.name == 'TokenExpiredError') {
+                localStorage.clear()
+                router.push('/')
+                toast.error(res.error.message, {
+                    position: "top-left",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                });
+
+            }
+            // console.log(" res sss--->>>>", res)
             setOrders(res.orders)
         }
 
@@ -32,6 +49,17 @@ const Orders = () => {
     return (
         <>
             <div className='min-h-screen'>
+                <ToastContainer
+                    position="top-left"
+                    autoClose={ 5000 }
+                    hideProgressBar={ false }
+                    newestOnTop={ false }
+                    closeOnClick
+                    rtl={ false }
+                    pauseOnFocusLoss
+                    draggable
+                    pauseOnHover
+                />
                 <h1 className='font-semibold text-center text-2xl p-8'>My Orders</h1>
                 <div className='container mx-auto md:px-9' >
                     <div className="flex flex-col">
