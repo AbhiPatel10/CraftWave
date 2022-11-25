@@ -5,12 +5,13 @@ import jsonwebtoken from "jsonwebtoken"
 const handler = async (req, res) => {
     try {
         if (req.method == "POST") {
+
+
             let token = req.body.token
             let user = jsonwebtoken.verify(token, process.env.NEXT_PUBLIC_JWT_SECRET)
-            let dbuser = await User.findOne({email : user.email})
-            const { name, email, address, pincode, phone } = dbuser
+            let dubuser = await User.findOneAndUpdate({email: user.email}, {address: req.body.address, pincode: req.body.pincode, phone: req.body.phone, name: req.body.name})
 
-            res.status(200).json({name, email, address, pincode, phone})
+            res.status(200).json({success: true})
         } else {
             res.status(400).json({ error: "This Method is not allowed" })
         }

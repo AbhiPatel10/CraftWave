@@ -9,19 +9,34 @@ const OrderSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    paymentInfo:{
+    paymentInfo: {
         type: String,
         default: ''
     },
     products: {
         type: Object,
         required: true
+
     },
-    address:{
+    address: {
         type: String,
         required: true
     },
-    transactionid:{
+    city: {
+        type: String,
+    },
+    pincode: {
+        type: String,
+    },
+    phone: {
+        type: String,
+        required: true
+    },
+    name: {
+        type: String,
+        required: true
+    },
+    transactionid: {
         type: String,
         default: ""
     },
@@ -39,6 +54,6 @@ const OrderSchema = new mongoose.Schema({
         required: true,
         default: "unShipped"
     }
-}, {timestamps: true});
+}, { timestamps: true });
 mongoose.models = {}
 export default mongoose.model("Order", OrderSchema);
