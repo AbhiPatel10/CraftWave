@@ -15,6 +15,7 @@
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.4.6",
     "next": "12.2.2",
+    "nodemailer": "^6.8.0",
     "paytmchecksum": "^1.5.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",

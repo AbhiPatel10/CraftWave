@@ -4,8 +4,8 @@ import { AiFillPlusCircle, AiFillMinusCircle } from 'react-icons/ai';
 import Link from "next/link"
 import Head from 'next/head';
 import Script from 'next/script';
-import { ToastContainer, toast } from 'react-toastify';
 import { useRouter } from 'next/router'
+import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import ReactLoading from 'react-loading';
 
@@ -24,10 +24,11 @@ const Checkout = ({ cart, clearCart, subTotal, addToCart, removeFromCart }) => {
   const router = useRouter()
 
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem('myuser'))
-    if (user && user.token) {
-      setUser(user)
-      setEmail(user.email)
+    const myuser = JSON.parse(localStorage.getItem('myuser'))
+    if (myuser && myuser.token) {
+      setUser(myuser)
+      setEmail(myuser.email)
+      fetchData(myuser.token)
     }
   }, [])
   useEffect(() => {
@@ -46,19 +47,44 @@ const Checkout = ({ cart, clearCart, subTotal, addToCart, removeFromCart }) => {
 
   }, [router.query])
 
+  const fetchData = async (token) => {
+    const data = { token: token };
+
+    let a = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/getuser`, {
+      method: 'POST', // or 'PUT'
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    })
+
+    let res = await a.json()
+    console.log("Fetch data -res ----", res)
+    setName(res.name)
+    setAddress(res.address)
+    setPincode(res.pincode)
+    setPhone(res.phone)
+    getPincode(res.pincode)
+  }
+
+  const getPincode = async (pincode) => {
+    let pins = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/pincode`)
+    let pinsJson = await pins.json()
+    if (Object.keys(pinsJson).includes(pincode)) {
+      setState(pinsJson[pincode][1])
+      setcity(pinsJson[pincode][0])
+    } else {
+      setState('')
+      setcity('')
+    }
+  }
 
   const pincodeHandler = async (e) => {
 
     let pincode = e.target.value;
     setPincode(pincode)
     if (pincode.length == 6) {
-      let pins = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/pincode`)
-      let pinsJson = await pins.json()
-      console.log("pincode $$$>>>>>", pincode)
-      if (Object.keys(pinsJson).includes(pincode)) {
-        setState(pinsJson[pincode][1])
-        setcity(pinsJson[pincode][0])
-      }
+      getPincode(pincode)
     } else {
       setState('')
       setcity('')
@@ -66,6 +92,7 @@ const Checkout = ({ cart, clearCart, subTotal, addToCart, removeFromCart }) => {
   }
 
   const initiatePayment = async (e) => {
+    console.log("pincode", pincode)
     setLoading(true)
     e.preventDefault()
     console.log("Its run")
@@ -128,7 +155,7 @@ const Checkout = ({ cart, clearCart, subTotal, addToCart, removeFromCart }) => {
   }
 
   return (
-    <div className='container px-5 sm:m-auto'>
+    <div className='container px-5 sm:m-auto min-h-screen'>
       <ToastContainer
         position="top-left"
         autoClose={ 5000 }
@@ -142,8 +169,10 @@ const Checkout = ({ cart, clearCart, subTotal, addToCart, removeFromCart }) => {
       />
       { loading && <div className='fixed top-1/2 left-1/2 '>
         <ReactLoading type="spinningBubbles" className='' margin='auto' color="#000000" />
-      </div>}
-      <Head><meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0" /></Head>
+      </div> }
+      <Head>
+      <title>Checkout - Epic Wear</title>
+      <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0" /></Head>
       <Script type="application/javascript" src={ `${process.env.NEXT_PUBLIC_PAYTM_HOST}/merchantpgpui/checkoutjs/merchants/${process.env.NEXT_PUBLIC_PAYTM_MID}.js` } crossorigin="anonymous" />
       <h1 className='font-bold text-3xl my-8 text-center'>Checkout</h1>
       <h2 className='font-semibold text-xl'>1. Delivery Details</h2>
@@ -151,7 +180,7 @@ const Checkout = ({ cart, clearCart, subTotal, addToCart, removeFromCart }) => {
         <div className='px-2 w-1/2'>
           <div className=" mb-4">
             <label htmlFor="name" className="leading-7 text-sm text-gray-600">Name</label>
-            <input onChange={ (e) => { setName(e.target.value) } } type="text" id="name" name="name" className="w-full bg-white rounded border border-gray-300 focus:border-pink-500 focus:ring-2 focus:ring-pink-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" />
+            <input onChange={ (e) => { setName(e.target.value) } } value={name} type="text" id="name" name="name" className="w-full bg-white rounded border border-gray-300 focus:border-pink-500 focus:ring-2 focus:ring-pink-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" />
           </div>
         </div>
         <div className='px-2 w-1/2'>
@@ -159,7 +188,7 @@ const Checkout = ({ cart, clearCart, subTotal, addToCart, removeFromCart }) => {
             <label htmlFor="email" className="leading-7 text-sm text-gray-600">Email</label>
             { user && user.token ? <input value={ user.email } readOnly={ true } type="email" id="email" name="email" className="w-full bg-white rounded border border-gray-300 focus:border-pink-500 focus:ring-2 focus:ring-pink-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" />
 
-              : <input onChange={ (e) => { setEmail(e.target.value) } } type="email" id="email" name="email" className="w-full bg-white rounded border border-gray-300 focus:border-pink-500 focus:ring-2 focus:ring-pink-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" /> }
+              : <input onChange={ (e) => { setEmail(e.target.value) } } value={email} type="email" id="email" name="email" className="w-full bg-white rounded border border-gray-300 focus:border-pink-500 focus:ring-2 focus:ring-pink-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" /> }
 
           </div>
         </div>
@@ -168,7 +197,7 @@ const Checkout = ({ cart, clearCart, subTotal, addToCart, removeFromCart }) => {
       <div className='px-2 w-full'>
         <div className=" mb-4">
           <label htmlFor="adress" className="leading-7 text-sm text-gray-600">Address</label>
-          <input onChange={ (e) => { setAddress(e.target.value) } } type="text" id="address" name="address" className="w-full bg-white rounded border border-gray-300 focus:border-pink-500 focus:ring-2 focus:ring-pink-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" />
+          <input onChange={ (e) => { setAddress(e.target.value) } } value={address} type="text" id="address" name="address" className="w-full bg-white rounded border border-gray-300 focus:border-pink-500 focus:ring-2 focus:ring-pink-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" />
         </div>
       </div>
       <div className='mx-auto flex'>
@@ -176,13 +205,13 @@ const Checkout = ({ cart, clearCart, subTotal, addToCart, removeFromCart }) => {
         <div className='px-2 w-1/2'>
           <div className=" mb-4">
             <label htmlFor="phone" className="leading-7 text-sm text-gray-600">Phone</label>
-            <input placeholder='Your 10 digit Phone Number' onChange={ (e) => { setPhone(e.target.value) } } type="phone" id="phone" name="phone" className="w-full bg-white rounded border border-gray-300 focus:border-pink-500 focus:ring-2 focus:ring-pink-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" />
+            <input placeholder='Your 10 digit Phone Number' onChange={ (e) => { setPhone(e.target.value) } } value={phone} type="phone" id="phone" name="phone" className="w-full bg-white rounded border border-gray-300 focus:border-pink-500 focus:ring-2 focus:ring-pink-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" />
           </div>
         </div>
         <div className='px-2 w-1/2'>
           <div className=" mb-4">
             <label htmlFor="pincode" className="leading-7 text-sm text-gray-600">Pincode</label>
-            <input placeholder='Your 6 digit Pincode' onChange={ pincodeHandler } type="text" id="pincode" name="pincode" className="w-full bg-white rounded border border-gray-300 focus:border-pink-500 focus:ring-2 focus:ring-pink-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" />
+            <input placeholder='Your 6 digit Pincode' onChange={ pincodeHandler } value={pincode} type="text" id="pincode" name="pincode" className="w-full bg-white rounded border border-gray-300 focus:border-pink-500 focus:ring-2 focus:ring-pink-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" />
           </div>
         </div>
       </div>
