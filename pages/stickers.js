@@ -49,7 +49,7 @@ const Stickers = ({products}) => {
 
 export async function getServerSideProps(context) {
     if(!mongoose.connections[0].readyState){
-      await mongoose.connect('mongodb://localhost:27017/epicwear')
+      await mongoose.connect(process.env.NEXT_PUBLIC_MONGO_URI)
     }
     let products = await Product.find({category: 'sticker'});
     let stickers = {}
