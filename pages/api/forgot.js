@@ -7,8 +7,8 @@ var CryptoJS = require("crypto-js");
 const handler = async (req, res) => {
 
     if (req.body.sendMail) {
-
-
+        
+        
         let dbuser = await User.findOne({ email: req.body.email })
 
         if (dbuser != null) {
@@ -17,7 +17,7 @@ const handler = async (req, res) => {
             const transporter = nodeMailer.createTransport({
                 host: 'smtp-mail.outlook.com',
                 auth: {
-                    user: 'epicwear.help@outlook.com',
+                    user: 'help.epicwear@outlook.com',
                     pass: 'Abhi@7751#'
                 }
             });
@@ -38,7 +38,7 @@ const handler = async (req, res) => {
             await transporter.sendMail(
                 {
                     text: emailTemplate,
-                    from: 'epicwear.help@outlook.com',
+                    from: 'help.epicwear@outlook.com',
                     to: req.body.email,
                     subject: 'Change Password - Epic Wear',
                 }
@@ -62,7 +62,7 @@ const handler = async (req, res) => {
             res.status(200).json({ success: true, message: 'Mail Sent Successfully' })
             return
         } else {
-            res.status(200).json({ success: false, error: 'Please finding your account' })
+            res.status(400).json({ success: false, message:'Your Account is not registered' , error: 'Your account is not registered' })
             return
 
         }
@@ -75,10 +75,10 @@ const handler = async (req, res) => {
         if (dbUser != null) {
             var EncryptedPass = CryptoJS.AES.encrypt(req.body.password, process.env.NEXT_PUBLIC_AES_SECRET).toString();
             await User.findOneAndUpdate({ email: dbUser.email }, { password: EncryptedPass })
-            res.status(200).json({ success: true })
+            res.status(200).json({ success: true, message: 'Password Changed Successfully' })
             return
         } else {
-            res.status(400).json({ success: false, error: "error" })
+            res.status(400).json({ success: false, message: 'User Not Found' ,error: "error" })
             return
         }
     }

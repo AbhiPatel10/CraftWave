@@ -69,7 +69,7 @@ const Navbar = ({ logout, user, cart, addToCart, removeFromCart, clearCart, subT
 
 
                 </div>
-                <div ref={ ref } className={ `z-50 w-72 h-[100vh] sideCart overflow-y-scroll absolute top-0 bg-pink-100 py-10 px-7 transition-all ${sidebar ? 'right-0' : '-right-96'}` }>
+                <div ref={ ref } className={ `z-50 w-72 h-[100vh] sideCart overflow-y-auto absolute top-0 bg-pink-100 py-10 px-7 transition-all ${sidebar ? 'right-0' : '-right-96'}` }>
                     <h2 className='font-bold text-xl text-center mb-5'>Shopping Cart</h2>
                     <span onClick={ toggleCart } className='absolute top-6 right-4 cursor-pointer text-2xl text-pink-500'><AiFillCloseCircle /></span>
                     <ol className='list-decimal font-semibold'>
