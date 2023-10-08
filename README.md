@@ -1,6 +1,6 @@
 # CraftWave 🚀
 
-<p align="center"><Link href="/"><img src="./public/logo-color.png" title="Logo" alt="Logo" height="200px"/><Link/></p>
+<p align="center"><Link href="/"><img src="https://github.com/AbhiPatel10/CraftWave/assets/76242769/3f68b4cb-6d73-4e1a-8cae-f5a4a55a8624" title="Logo" alt="Logo" height="200px"/><Link/></p>
 <div align="center">
 </div>
 
@@ -83,6 +83,6 @@ Don't forget to leave a star ⭐️
 
 ## Thank You to Our Contributors❤️
 
-<Link href="https://github.com/AbhiPatel10/epicwear/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=AbhiPatel10/epicwear" />
+<Link href="https://github.com/AbhiPatel10/CraftWave/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=AbhiPatel10/CraftWave" />
 <Link/>
