@@ -1,34 +1,88 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# CraftWave 🚀
 
-## Getting Started
+<p align="center"><Link href="/"><img src="./public/logo-color.png" title="Logo" alt="Logo" height="200px"/><Link/></p>
+<div align="center">
+</div>
 
-First, run the development server:
+# About
+### "CraftWave: Where Creativity Meets Craftsmanship"
 
-```bash
-npm run dev
-# or
-yarn dev
-```
+Dive into the world of creativity with CraftWave, an open-source ecommerce platform that's all about promoting the charm of handcrafted products. CraftWave is a celebration of artistry and craftsmanship, showcasing a diverse array of handmade treasures that tell unique stories.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Tech stack used to build CraftWave ⚙️
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+[![Next.js](https://img.shields.io/badge/next.js-%2320232a.svg?style=for-the-badge&logo=next.js&logoColor=%2361DAFB)](https://nextjs.org/) [![TailwindCSS](https://img.shields.io/badge/Tailwind_CSS-%23326ce9.svg?style=for-the-badge&logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
+## Getting Started 👩‍💻
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+> ⚠️Prerequisites
+>
+> - Before getting into it, make sure you have [node](https://nodejs.org/en/download) installed.
 
-## Learn More
+### Let's jump right in🌟
 
-To learn more about Next.js, take a look at the following resources:
+1. Fork the project
+2. Clone the project to run on your local machine using the following command:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+   ```sh
+   git clone https://github.com/<your_github_username>/CraftWave.git
+   ```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+3. Get into the root directory
 
-## Deploy on Vercel
+   ```sh
+   cd CraftWave
+   ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+4. Install all dependencies by running
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+   ```sh
+   npm install
+   ```
+
+5. Create your branch
+
+   ```sh
+   git checkout -b <your_branch_name>
+   ```
+
+6. Run and view the application on localhost
+
+   ```sh
+   npm run dev
+   ```
+
+7. Make your changes
+
+8. Stage your changes
+
+   ```sh
+   git add <filename>
+   ```
+
+9. Commit your changes
+
+   ```sh
+   git commit -m "<your-commit-message>"
+   ```
+
+10. Push your changes to your branch
+
+    ```sh
+    git push origin "<your_branch_name>"
+    ```
+
+11. Create a Pull Request.
+
+    > Click _compare across forks_ if you don't see your branch
+
+
+## 🙏Support
+
+Don't forget to leave a star ⭐️
+
+## Thank You to Our Contributors❤️
+
+<Link href="https://github.com/AbhiPatel10/epicwear/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=AbhiPatel10/epicwear" />
+<Link/>
