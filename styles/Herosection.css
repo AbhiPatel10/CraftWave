@@ -68,11 +68,11 @@
   }
 }
 .hero .hero-img-wrap:after {
-  content: "";
+  content: '';
   position: absolute;
   width: 255px;
   height: 217px;
-  background-image: url("../public/dots-light.svg");
+  background-image: url('../public/dots-light.svg');
   background-size: contain;
   background-repeat: no-repeat;
   right: -100px;
@@ -84,13 +84,12 @@
   }
 }
 
-
 .hero .intro-excerpt {
-    position: relative;
-    z-index: 4;
+  position: relative;
+  z-index: 4;
+}
+@media (min-width: 992px) {
+  .hero .intro-excerpt {
+    max-width: 450px;
   }
-  @media (min-width: 992px) {
-    .hero .intro-excerpt {
-      max-width: 450px;
-    }
-  }
+}

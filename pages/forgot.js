@@ -1,17 +1,19 @@
-import React, { useEffect, useState } from "react";
-import Link from "next/link";
-import { useRouter } from "next/router";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import React, { useEffect, useState } from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import Image from 'next/image'
+
 
 const Forgot = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [cpassword, setCpassword] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [cpassword, setCpassword] = useState('');
   const router = useRouter();
   useEffect(() => {
-    if (localStorage.getItem("Token")) {
-      router.push("/");
+    if (localStorage.getItem('Token')) {
+      router.push('/');
     }
   }, []);
 
@@ -24,19 +26,19 @@ const Forgot = () => {
     };
 
     let a = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/forgot`, {
-      method: "POST", // or 'PUT'
+      method: 'POST', // or 'PUT'
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify(data),
     });
 
     let res = await a.json();
 
-    console.log("response", res);
+    console.log('response', res);
     if (res.success) {
       toast.success(res.message, {
-        position: "top-left",
+        position: 'top-left',
         autoClose: 5000,
         hideProgressBar: false,
         closeOnClick: true,
@@ -46,7 +48,7 @@ const Forgot = () => {
       });
     } else {
       toast.error(res.error, {
-        position: "top-left",
+        position: 'top-left',
         autoClose: 5000,
         hideProgressBar: false,
         closeOnClick: true,
@@ -69,9 +71,9 @@ const Forgot = () => {
       };
 
       let a = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/forgot`, {
-        method: "POST", // or 'PUT'
+        method: 'POST', // or 'PUT'
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify(data),
       });
@@ -80,7 +82,7 @@ const Forgot = () => {
 
       if (res.success) {
         toast.success(res.message, {
-          position: "top-left",
+          position: 'top-left',
           autoClose: 5000,
           hideProgressBar: false,
           closeOnClick: true,
@@ -89,11 +91,11 @@ const Forgot = () => {
           progress: undefined,
         });
         setTimeout(() => {
-            router.push("/login");
-          }, 4000);
+          router.push('/login');
+        }, 4000);
       } else {
         toast.error(res.error, {
-          position: "top-left",
+          position: 'top-left',
           autoClose: 5000,
           hideProgressBar: false,
           closeOnClick: true,
@@ -120,7 +122,8 @@ const Forgot = () => {
       />
       <div className="max-w-md w-full space-y-8">
         <div>
-          <img
+          <Image
+          layout="fill"
             className="mx-auto h-12 w-auto"
             src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg"
             alt="Workflow"
@@ -130,13 +133,13 @@ const Forgot = () => {
           </h2>
           <p className="mt-2 text-center text-sm text-gray-600">
             Or
-            <Link href={"/signup"}>
+            <Link href={'/signup'}>
               <a
                 href="#"
                 className="font-medium text-pink-600 hover:text-pink-500"
               >
-                {" "}
-                Sign in{" "}
+                {' '}
+                Sign in{' '}
               </a>
             </Link>
           </p>
@@ -209,8 +212,8 @@ const Forgot = () => {
                 <p>
                   {password !== cpassword && (
                     <span className="text-red-600">
-                      {" "}
-                      Password don&apos;t match{" "}
+                      {' '}
+                      Password don&apos;t match{' '}
                     </span>
                   )}
                   {password && password === cpassword && (

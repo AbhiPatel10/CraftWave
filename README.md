@@ -5,6 +5,7 @@
 </div>
 
 # About
+
 ### "CraftWave: Where Creativity Meets Craftsmanship"
 
 Dive into the world of creativity with CraftWave, an open-source ecommerce platform that's all about promoting the charm of handcrafted products. CraftWave is a celebration of artistry and craftsmanship, showcasing a diverse array of handmade treasures that tell unique stories.
@@ -37,7 +38,7 @@ Dive into the world of creativity with CraftWave, an open-source ecommerce platf
 4. Install all dependencies by running
 
    ```sh
-   npm install
+   yarn install
    ```
 
 5. Create your branch
@@ -49,7 +50,7 @@ Dive into the world of creativity with CraftWave, an open-source ecommerce platf
 6. Run and view the application on localhost
 
    ```sh
-   npm run dev
+   yarn dev
    ```
 
 7. Make your changes
@@ -75,7 +76,6 @@ Dive into the world of creativity with CraftWave, an open-source ecommerce platf
 11. Create a Pull Request.
 
     > Click _compare across forks_ if you don't see your branch
-
 
 ## 🙏Support
 
